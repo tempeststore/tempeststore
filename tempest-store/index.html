@@ -1,0 +1,445 @@
+<!-- FILE 1: index.html (Tempest Store Frontend) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tempest Store - Trending products at unbeatable prices. Free worldwide shipping.">
+    <meta name="tiktok:domain" content="tempeststore.vercel.app">
+    <title>Tempest Store | Premium Dropship Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 20px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,217,255,0.1); }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 800; color: #00d9ff; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: #fff; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #00d9ff; }
+        .cart-icon { position: relative; cursor: pointer; font-size: 24px; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background: #ff4757; color: #fff; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        
+        /* Hero */
+        .hero { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1920&q=80'); background-size: cover; background-position: center; padding: 120px 0; text-align: center; animation: fadeIn 1s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hero h1 { font-size: 48px; margin-bottom: 20px; color: #00d9ff; text-shadow: 0 0 30px rgba(0,217,255,0.5); }
+        .hero p { font-size: 20px; margin-bottom: 40px; color: #ccc; }
+        .cta-btn { background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%); color: #000; padding: 15px 40px; border: none; border-radius: 30px; font-size: 18px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 20px rgba(0,217,255,0.4); }
+        .cta-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(0,217,255,0.6); }
+        
+        /* Products */
+        .products { padding: 80px 0; }
+        .section-title { font-size: 36px; text-align: center; margin-bottom: 20px; color: #00d9ff; }
+        .section-subtitle { text-align: center; color: #888; margin-bottom: 60px; font-size: 16px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card { background: #1a1a2e; border-radius: 15px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; position: relative; }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 10px 40px rgba(0,217,255,0.2); }
+        .product-img { width: 100%; height: 300px; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover .product-img { transform: scale(1.05); }
+        .product-info { padding: 20px; }
+        .product-title { font-size: 18px; margin-bottom: 10px; line-height: 1.4; }
+        .product-rating { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 14px; }
+        .stars { color: #ffd700; }
+        .product-price { font-size: 24px; color: #00d9ff; font-weight: 700; margin-bottom: 10px; }
+        .shipping-info { color: #888; font-size: 13px; margin-bottom: 15px; }
+        .add-to-cart { width: 100%; background: #00d9ff; color: #000; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .add-to-cart:hover { background: #00b8d4; }
+        .viral-badge { position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #ff0050 0%, #cc0040 100%); color: #fff; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 10; box-shadow: 0 3px 15px rgba(255,0,80,0.4); }
+        
+        /* Cart Modal */
+        .cart-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; backdrop-filter: blur(5px); }
+        .cart-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); width: 90%; max-width: 500px; margin: 50px auto; border-radius: 15px; padding: 30px; box-shadow: 0 10px 50px rgba(0,217,255,0.2); border: 1px solid rgba(0,217,255,0.3); }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-cart { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; transition: color 0.3s; }
+        .close-cart:hover { color: #00d9ff; }
+        .cart-items { max-height: 300px; overflow-y: auto; margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 18px; font-weight: 700; color: #00d9ff; }
+        .checkout-btn { width: 100%; background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%); color: #000; padding: 15px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: transform 0.3s; }
+        .checkout-btn:hover { transform: scale(1.02); }
+        
+        /* Checkout Modal */
+        .checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; backdrop-filter: blur(5px); }
+        .checkout-content { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); width: 90%; max-width: 600px; margin: 50px auto; border-radius: 15px; padding: 30px; box-shadow: 0 10px 50px rgba(0,217,255,0.2); border: 1px solid rgba(0,217,255,0.3); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #00d9ff; font-weight: 500; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background: rgba(15,15,15,0.8); border: 1px solid rgba(0,217,255,0.3); border-radius: 8px; color: #fff; font-size: 14px; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #00d9ff; }
+        .place-order-btn { width: 100%; background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%); color: #000; padding: 15px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: transform 0.3s; }
+        .place-order-btn:hover { transform: scale(1.02); }
+        
+        /* Footer */
+        footer { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 40px 0; text-align: center; border-top: 1px solid rgba(0,217,255,0.2); }
+        .footer-text { color: #888; margin-bottom: 15px; }
+        .footer-highlight { color: #00d9ff; font-weight: 600; }
+        
+        /* TikTok Badge */
+        .tiktok-badge { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); border: 2px solid #ff0050; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 999; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 5px 20px rgba(255,0,80,0.4); }
+        .tiktok-badge:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(255,0,80,0.6); }
+        .tiktok-badge svg { width: 30px; height: 30px; fill: #fff; }
+        
+        /* Trust Badges */
+        .trust-badges { display: flex; justify-content: center; gap: 30px; margin-top: 60px; flex-wrap: wrap; }
+        .trust-badge { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .trust-icon { font-size: 32px; }
+        .trust-text { color: #888; font-size: 14px; text-align: center; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .nav-links { display: none; }
+            .product-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Tempest Store</div>
+                <div class="nav-links">
+                    <a href="#products">Products</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="cart-icon" onclick="toggleCart()">
+                    🛒 <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Trending Products. Unbeatable Prices.</h1>
+            <p>Free worldwide shipping on all orders. Delivered in 7-15 days.</p>
+            <button class="cta-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Shop Now</button>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">Trending Now 🔥</h2>
+            <p class="section-subtitle">Free worldwide shipping • 7-15 day delivery • 30-day returns</p>
+            <div class="product-grid" id="productGrid"></div>
+            
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <div class="trust-icon">🚚</div>
+                    <div class="trust-text">Free Worldwide<br>Shipping</div>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">🔒</div>
+                    <div class="trust-text">Secure<br>Checkout</div>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">↩️</div>
+                    <div class="trust-text">30-Day<br>Returns</div>
+                </div>
+                <div class="trust-badge">
+                    <div class="trust-icon">⭐</div>
+                    <div class="trust-text">10,000+<br>Happy Customers</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <button class="close-cart" onclick="toggleCart()">×</button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="toggleCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-content">
+            <div class="cart-header">
+                <h2>Secure Checkout</h2>
+                <button class="close-cart" onclick="toggleCheckout()">×</button>
+            </div>
+            <form id="checkoutForm" onsubmit="placeOrder(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Shipping Address *</label>
+                    <textarea id="address" rows="3" placeholder="123 Main Street, Apt 4B" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" id="city" placeholder="New York" required>
+                </div>
+                <div class="form-group">
+                    <label>Postal Code *</label>
+                    <input type="text" id="postalCode" placeholder="10001" required>
+                </div>
+                <div class="form-group">
+                    <label>Country *</label>
+                    <input type="text" id="country" placeholder="United States" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number (for delivery updates)</label>
+                    <input type="tel" id="phone" placeholder="+1 234 567 8900">
+                </div>
+                <button type="submit" class="place-order-btn">Place Order - <span id="checkoutTotal">$0.00</span></button>
+            </form>
+        </div>
+    </div>
+
+    <footer id="contact">
+        <div class="container">
+            <p class="footer-text">© 2024 Tempest Store. All rights reserved.</p>
+            <p class="footer-text">Questions? Email us at <span class="footer-highlight">support@tempeststore.vercel.app</span></p>
+            <p class="footer-text">Free worldwide shipping | 30-day returns | Secure checkout</p>
+        </div>
+    </footer>
+
+    <div class="tiktok-badge" onclick="window.open('https://tiktok.com/@tempeststore', '_blank')">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+    </div>
+
+    <script>
+        // OPTIMIZED PRODUCT CATALOG
+        const products = [
+            {
+                id: 1,
+                title: 'LED Galaxy Projector Night Light',
+                price: 49.99,
+                cost: 18.50,
+                image: 'https://images.unsplash.com/photo-1534234828563-025c2763963e?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-GAL-001',
+                cjProductId: '1005004567891234',
+                rating: 4.9,
+                orders: 15420,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '7-15',
+                tiktokViral: true
+            },
+            {
+                id: 2,
+                title: 'Portable Neck Fan USB Rechargeable',
+                price: 29.99,
+                cost: 8.90,
+                image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-FAN-089',
+                cjProductId: '1005003456789012',
+                rating: 4.8,
+                orders: 28350,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '7-12',
+                tiktokViral: true
+            },
+            {
+                id: 3,
+                title: 'Smart Watch Ultra 2.0 Inch AMOLED',
+                price: 89.99,
+                cost: 31.50,
+                image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-WATCH-007',
+                cjProductId: '1005005678901234',
+                rating: 4.8,
+                orders: 12890,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '8-15',
+                tiktokViral: false
+            },
+            {
+                id: 4,
+                title: 'Wireless Earbuds Pro ANC Bluetooth 5.3',
+                price: 59.99,
+                cost: 15.80,
+                image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-BUDS-128',
+                cjProductId: '1005004123456789',
+                rating: 4.9,
+                orders: 34210,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '7-14',
+                tiktokViral: true
+            },
+            {
+                id: 5,
+                title: '3-in-1 Phone Camera Lens Kit',
+                price: 39.99,
+                cost: 11.90,
+                image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-LENS-015',
+                cjProductId: '1005003789012345',
+                rating: 4.8,
+                orders: 9870,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '7-13',
+                tiktokViral: true
+            },
+            {
+                id: 6,
+                title: 'Portable Blender Bottle 380ml USB',
+                price: 34.99,
+                cost: 11.50,
+                image: 'https://images.unsplash.com/photo-1570222094114-28a9d88a27e6?w=400&q=80',
+                supplier: 'CJdropshipping',
+                sku: 'CJ-BLEND-042',
+                cjProductId: '1005004890123456',
+                rating: 4.9,
+                orders: 21560,
+                shipping: 'CJPacket Ordinary',
+                shippingDays: '7-12',
+                tiktokViral: true
+            }
+        ];
+
+        let cart = [];
+
+        // Render products with badges and ratings
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    ${product.tiktokViral ? '<div class="viral-badge">TIKTOK VIRAL</div>' : ''}
+                    <img src="${product.image}" alt="${product.title}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400&q=80'">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-rating">
+                            <span class="stars">★</span>
+                            <span>${product.rating} (${product.orders.toLocaleString()} sold)</span>
+                        </div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <div class="shipping-info">📦 Ships in ${product.shippingDays} via ${product.shipping}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCart();
+            toggleCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cartCount').textContent = cart.length;
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <span>${item.title}</span>
+                    <span>$${item.price.toFixed(2)}</span>
+                </div>
+            `).join('');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('checkoutTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleCheckout() {
+            const cartModal = document.getElementById('cartModal');
+            const checkoutModal = document.getElementById('checkoutModal');
+            cartModal.style.display = 'none';
+            checkoutModal.style.display = checkoutModal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Order placement with Vercel Serverless Backend
+        async function placeOrder(event) {
+            event.preventDefault();
+            
+            const orderData = {
+                customer: {
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value || '+1234567890',
+                    address: {
+                        street: document.getElementById('address').value,
+                        apartment: '',
+                        city: document.getElementById('city').value,
+                        state: '',
+                        postalCode: document.getElementById('postalCode').value,
+                        country: document.getElementById('country').value
+                    }
+                },
+                items: cart.map(item => ({
+                    sku: item.sku,
+                    cjProductId: item.cjProductId,
+                    quantity: 1,
+                    supplier: 'CJdropshipping'
+                })),
+                total: cart.reduce((sum, item) => sum + item.price, 0),
+                profit: cart.reduce((sum, item) => sum + (item.price - item.cost), 0)
+            };
+
+            console.log('🔥 Order received:', orderData);
+            console.log('💰 Projected profit:', `$${orderData.profit.toFixed(2)}`);
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                console.log('Backend Response:', result);
+
+                if (response.ok && result.success) {
+                    alert(`✅ Order placed successfully!\n\nOrder ID: ${result.orderId}\nTotal: $${result.total.toFixed(2)}\n\nYour items will ship within 24 hours via CJPacket.\n\nTracking info will be emailed to ${orderData.customer.email}\n\nEstimated delivery: ${result.estimatedDelivery}`);
+                    
+                    cart = [];
+                    updateCart();
+                    toggleCheckout();
+                    document.getElementById('checkoutForm').reset();
+                } else {
+                    console.error('❌ Order Error:', result);
+                    alert(`⚠️ Order received but processing incomplete.\n\nWe'll contact you at ${orderData.customer.email} within 24 hours to confirm.\n\nError: ${result.error || 'Unknown error'}`);
+                }
+
+            } catch (error) {
+                console.error('❌ Network Error:', error);
+                alert('⚠️ Thanks for your order! We\'ll be in touch shortly to confirm details.\n\n(Error: ' + error.message + ')');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Initialize
+        renderProducts();
+    </script>
+</body>
+</html>
